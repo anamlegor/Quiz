@@ -1,29 +1,41 @@
 var models = require('../models/models.js');
+var busqueda;
+// GET /quizes
+exports.index = function(req, res) {
+	busqueda=req.query.search;
+  if(busqueda===undefined){
+  models.Quiz.findAll().then(function(quizes) {
+    res.render('quizes/index.ejs', { quizes: quizes});  })}
+  else{
+  	busqueda="%"+busqueda+"%";
+  	busqueda = busqueda.replace(' ', '%');
+	models.Quiz.findAll({where: ["pregunta like ?", busqueda]}).then(function(quizes) {
+    res.render('quizes/index.ejs', { quizes: quizes});  })
 
-// GET /quizes/question
-exports.question = function(req, res) {
-    models.Quiz.findAll().then(function(quiz) {
-    res.render('quizes/question', { pregunta: quiz[0].pregunta});
-  })
+  }
    
 };
 
-// GET /quizes/answer
+
+
+// GET /quizes/:id
+exports.show = function(req, res) {
+  models.Quiz.find(req.params.quizId).then(function(quiz) {
+    res.render('quizes/show', { quiz: quiz});
+  })
+};
+
+// GET /quizes/:id/answer
+
 exports.answer = function(req, res) {
- models.Quiz.findAll().then(function(quiz) {
-    if (req.query.respuesta === quiz[0].respuesta) {
-      res.render('quizes/answer', { respuesta: 'Correcto' });
+  models.Quiz.find(req.params.quizId).then(function(quiz) {
+    if (req.query.respuesta === quiz.respuesta) {
+      res.render('quizes/answer', 
+                 { quiz: quiz, respuesta: 'Correcto' });
     } else {
-      res.render('quizes/answer', { respuesta: 'Incorrecto'});
+       res.render('quizes/answer', 
+                 { quiz: quiz, respuesta: 'Incorrecto'});
     }
   })
 
-//GET  /quizes?search=texto_a_buscar
-/*exports.busqueda = function(req, res) {
-	res.render('/quizes?search=texto_a_buscar',{
-		search = search.replace(' ', '%');
-	findAll({where: ["pregunta like ?", search]});
-
-
-	});*/
 };
