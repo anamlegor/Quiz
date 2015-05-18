@@ -9,6 +9,8 @@ var quizController = require('../controllers/quiz_controller');
    res.render('index', { title: 'Quiz' });
  });
 
+router.param('quizId', quizController.load); // autoload :quizId
+
   /* GET authors page. */
  router.get('/author', function(req, res) {
    res.render('author');
