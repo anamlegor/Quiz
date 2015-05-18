@@ -12,6 +12,7 @@ var sessionController = require('../controllers/session_controller');
  });
 
 router.param('quizId', quizController.load); // autoload :quizId
+router.param('commentId', commentController.load);  // autoload :commentId
 
 // Definición de rutas de sesion
 router.get('/login',  sessionController.new);     // formulario login
@@ -35,5 +36,6 @@ router.delete('/quizes/:quizId(\\d+)',     sessionController.loginRequired, quiz
 // Definición de rutas de comentarios
 router.get('/quizes/:quizId(\\d+)/comments/new', commentController.new);
 router.post('/quizes/:quizId(\\d+)/comments',    commentController.create);
+router.get('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish', sessionController.loginRequired, commentController.publish);
 
  module.exports = router;
