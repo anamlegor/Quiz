@@ -23,6 +23,10 @@ router.get('/logout', sessionController.destroy); // destruir sesión
  router.get('/author', function(req, res) {
    res.render('author', { title: 'Autores', errors: []});
  });
+
+ /* GET statistics page. */
+router.get('/quizes/statistics',quizController.statistics);
+
  // Definición de rutas de /quizes
 router.get('/quizes',quizController.index);
 router.get('/quizes/:quizId(\\d+)',        quizController.show);

@@ -9,7 +9,8 @@ var methodOverride = require('method-override');
 var session = require('express-session');
 var routes = require('./routes/index');
 
-
+var tiempo1;
+var tiempo2;
 var app = express();
 
 // view engine setup
@@ -40,8 +41,20 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use('/', routes);
+//Funciones a realizar todo el rato
+app.use(function(req, res, next) {
+if (req.session.user){
+  //comprobamos si han pasado dos minutos
+  tiempo1=new Date(req.session.user.tiempo);
+  tiempo2=new Date();
+  if((tiempo2 - tiempo1)<120000){
+    req.session.user.tiempo=tiempo2;
+  }else {delete req.session.user;}
+}next();
 
+});
+
+app.use('/', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

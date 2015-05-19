@@ -125,4 +125,32 @@ exports.destroy = function(req, res) {
   }).catch(function(error){next(error)});
 };
 
-//  console.log("req.quiz.id: " + req.quiz.id);
+exports.statistics = function(req,res){
+
+  models.Quiz.findAll({include: [{
+    
+     model: models.Comment 
+    
+    }]}).then(function(Preguntas){
+
+     models.Comment.count().then(function(numeroComentarios){
+      var pregsConCo = 0;
+      var numeroPreguntas = Preguntas.length;
+      var media = numeroComentarios/numeroPreguntas;
+      media=media.toFixed(3);
+      for(i = 0; i < numeroPreguntas; i++){
+
+        //console.log(P[index].Comments);
+        if(Preguntas[i].Comments.length > 0){
+          pregsConCo++;
+        }
+      }
+      var pregsSinCo = numeroPreguntas - pregsConCo;
+
+res.render('quizes/statistics',{numeroPreguntas: numeroPreguntas, 
+  numeroComentarios: numeroComentarios, media: media, pregsSinCo: pregsSinCo, 
+  pregsConCo: pregsConCo, errors: []});
+    });
+});
+
+};
