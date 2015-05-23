@@ -35,10 +35,21 @@ exports.load = function(req, res, next, quizId) {
 };
 
 // GET /quizes
-exports.index = function(req, res) {
-	busqueda=req.query.search;
+// GET /users/:userId/quizes
+exports.index = function(req, res) {  
+  busqueda=req.query.search;
+  var options = {};
+  if(req.user){
+    options.where = {UserId: req.user.id}
+
+    models.Quiz.findAll(options).then(function(quizes){
+      //console.log(quizes);
+    res.render('quizes/index.ejs', {quizes: quizes, errors: []});
+  }).catch(function(error){next(error);});
+ 
+  }else{
   if(busqueda===undefined){
-  models.Quiz.findAll().then(
+  models.Quiz.findAll(options).then(
     function(quizes) {
       res.render('quizes/index.ejs', {quizes: quizes, errors: []});
     }
@@ -51,7 +62,7 @@ exports.index = function(req, res) {
       res.render('quizes/index.ejs', {quizes: quizes, errors: []});
     }
 ).catch(function(error){next(error)});
-
+}
   }
    
 };
