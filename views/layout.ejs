@@ -30,6 +30,8 @@
     <span><a href="/quizes">Preguntas</a></span>
    <%if(session.user){%>
       <span><a href="/user/<%=session.user.id%>/quizes">Mis Preguntas</a></span>
+      <span><a href="/user/<%=session.user.id%>/favourites">Mis Favoritos</a></span>
+
     <%}%>
     <span><a href="/author">Sobre los autores</a></span>
     <span><a href="/quizes/statistics">Estadísticas</a></span>

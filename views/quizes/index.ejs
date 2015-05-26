@@ -5,6 +5,20 @@
 </form>
 <% var i; for (i=0; i < quizes.length; i++) { %>        
     <tr>
+    <% if (session.user){
+    if(favoritos.indexOf(quizes[i].id)>=0){
+    %>
+    <td><form method="post" action="/user/<%=session.user.id%>/favourites/<%= quizes[i].id%>?_method=delete">
+    <button type="submit" class="amarillo" onClick="return confirm('¿Desea eliminar <%= quizes[i].pregunta %> de su lista de favoritos?');"> <img src="/images/EstrellaAmarilla.png"></button></form></td>
+
+    <% }else{
+    %>
+    <td><form method="post" action="/user/<%=session.user.id%>/favourites/<%= quizes[i].id%>?_method=put">
+    <button type="submit" class="gris"><img src="/images/EstrellaGris.png"></button></form></td>
+
+    <%
+    }
+    }%>
       <td><a href="/quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
        <%if(session.user) {
          if (session.user.isAdmin || session.user.id === quizes[i].UserId) {%>
@@ -17,7 +31,7 @@
           </form>
         </td>
       <%}
-      }%>
+      }%></br>
 
     </tr> 
   <% } %>

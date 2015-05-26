@@ -37,21 +37,34 @@ exports.load = function(req, res, next, quizId) {
 // GET /quizes
 // GET /users/:userId/quizes
 exports.index = function(req, res) {  
+  var favoritos = [];
   busqueda=req.query.search;
   var options = {};
+  
+  if(req.session.user){
+    models.Favourites.findAll({
+      where: {UserId: Number(req.session.user.id) }
+    }).then(function(enc){
+      for(index = 0; index < enc.length;index++){
+      favoritos.push(enc[index].dataValues.QuizId);
+      }
+    })
+  }
+
+
   if(req.user){
     options.where = {UserId: req.user.id}
 
     models.Quiz.findAll(options).then(function(quizes){
       //console.log(quizes);
-    res.render('quizes/index.ejs', {quizes: quizes, errors: []});
+    res.render('quizes/index.ejs', {quizes: quizes, errors: [], favoritos: favoritos});
   }).catch(function(error){next(error);});
  
   }else{
   if(busqueda===undefined){
   models.Quiz.findAll(options).then(
     function(quizes) {
-      res.render('quizes/index.ejs', {quizes: quizes, errors: []});
+      res.render('quizes/index.ejs', {quizes: quizes, errors: [], favoritos: favoritos});
     }
 ).catch(function(error){next(error)});
 }else{
@@ -59,7 +72,7 @@ exports.index = function(req, res) {
   	busqueda = busqueda.replace(' ', '%');
 	models.Quiz.findAll({where: ["pregunta like ?", busqueda]}).then(
     function(quizes) {
-      res.render('quizes/index.ejs', {quizes: quizes, errors: []});
+      res.render('quizes/index.ejs', {quizes: quizes, errors: [], favoritos: favoritos});
     }
 ).catch(function(error){next(error)});
 }
@@ -71,7 +84,31 @@ exports.index = function(req, res) {
 
 // GET /quizes/:id
 exports.show = function(req, res) {
-  res.render('quizes/show', { quiz: req.quiz, errors: []});
+  models.Quiz.find(req.params.quizId).then(function(quiz){
+    //Control de favoritos
+    var isFavorito = 0 ;
+
+    if(req.session.user){
+      
+      models.Favourites.findAll({
+          where: {QuizId: Number(req.params.quizId) },
+      
+        }).then(function(enc){
+    
+          for(index = 0; index < enc.length;index++){
+
+           if(req.session.user.id === enc[index].dataValues.UserId){
+              isFavorito=1;
+          }}
+        })
+      .then(function(){
+        res.render('quizes/show' , {quiz: req.quiz, errors: [], isFavorito: isFavorito });
+      })}else{
+
+        res.render('quizes/show' , {quiz: req.quiz, errors: [], isFavorito: isFavorito });
+      }
+    })
+  
 };   // req.quiz: instancia de quiz cargada con autoload
 
 // GET /quizes/:id/answer

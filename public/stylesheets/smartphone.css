@@ -8,3 +8,6 @@ body             { font-size: xx-large; }
 input, button    { font-size: x-large; }
 footer           { font-size: large; }
 .quiz_img { float: none; } 
+
+.amarillo{background:url('images/EstrellaAmarilla.png') no-repeat; border:none;}
+.gris{background:url('images/EstrellaGris.png') no-repeat; border:none;}

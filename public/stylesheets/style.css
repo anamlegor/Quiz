@@ -16,3 +16,6 @@ nav span             { margin: 0px 10px 0px 0px;
 .quiz_img 			 { height: 150px; float: left;} 
 
 #contenido{ overflow:scroll; height: 400px;}
+
+.amarillo{background:url('images/EstrellaAmarilla.png') no-repeat; border:none;}
+.gris{background:url('images/EstrellaGris.png') no-repeat; border:none;}

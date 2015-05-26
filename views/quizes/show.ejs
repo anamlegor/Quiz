@@ -2,6 +2,21 @@
 <p><img class="quiz_img" src="/media/<%= quiz.image %>"></p>
 <%}%>
 
+<% if (session.user){
+    if(isFavorito>0){
+    %>
+    <form method="post" action="/user/<%=session.user.id%>/favourites/<%= quiz.id%>?_method=delete">
+    <button type="submit" class="amarillo" onClick="return confirm('¿Desea eliminar <%= quiz.pregunta %> de su lista de favoritos?');"><img src="/images/EstrellaAmarilla.png"></button>
+    </form>
+
+    <% }else{
+    %>
+    <form method="post" action="/user/<%=session.user.id%>/favourites/<%= quiz.id%>?_method=put">
+    <button type="submit" class="gris"><img src="/images/EstrellaGris.png"></button></form>
+
+    <%
+    }
+    }%>
 <form method="get" action="/quizes/<%= quiz.id %>/answer">        
   <%= quiz.pregunta %> <p>
    <input type="text" name="respuesta" value="Respuesta"/>
