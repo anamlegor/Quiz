@@ -130,7 +130,7 @@ exports.answer = function(req, res) {
 // GET /quizes/new
 exports.new = function(req, res) {
   var quiz = models.Quiz.build( // crea objeto quiz 
-    {pregunta: "Pregunta", respuesta: "Respuesta"}
+    {pregunta: "Pregunta", respuesta: "Respuesta", tipo: "Tipo"}
   );
 
   res.render('quizes/new', {quiz: quiz, errors: []});
@@ -154,7 +154,7 @@ quiz.validate()
         res.render('quizes/new', {quiz: quiz, errors: err.errors});
       } else {
         quiz // save: guarda en DB campos pregunta y respuesta de quiz
-        .save({fields: ["pregunta", "respuesta", "UserId", "image"]})
+        .save({fields: ["pregunta", "respuesta", "UserId", "tipo", "image"]})
         .then( function(){ res.redirect('/quizes')}) 
       }      // res.redirect: Redirección HTTP a lista de preguntas
     }
@@ -186,7 +186,7 @@ if(req.files.image){
         res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
       } else {
         req.quiz     // save: guarda campos pregunta y respuesta en DB
-        .save( {fields: ["pregunta", "respuesta", "image"]})
+        .save( {fields: ["pregunta", "respuesta", "tipo", "image"]})
         .then( function(){ res.redirect('/quizes');});
       }     // Redirección HTTP a lista de preguntas (URL relativo)
     }

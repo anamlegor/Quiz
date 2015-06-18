@@ -11,6 +11,9 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.STRING,
         validate: { notEmpty: {msg: "-> Falta Respuesta"}}
       },
+      tipo: {
+        type: DataTypes.STRING,
+      },
       image: {
         type: DataTypes.STRING
 
